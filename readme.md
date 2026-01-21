@@ -162,6 +162,9 @@ Workflow automaticky:
 ✅ **SQL server** - SQLAlchemy s podporou PostgreSQL/MySQL  
 ✅ **JSON backup** - ukládání do .json souboru  
 
+## Kubernetes
+**https://my-form.kube.sspu-opava.cz/**
+
 ## 👨‍💻 Autor
 
 Školní projekt pro SŠPU Opava
