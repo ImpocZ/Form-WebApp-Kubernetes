@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "macros.html" import render_input, render_textarea, render_flash_messages %}
+
+{% block title %}Kontaktní formulář - Domů{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h1>Kontaktní formulář</h1>
+    <p class="subtitle">Vyplňte prosím všechny povinné údaje</p>
+    
+    {{ render_flash_messages() }}
+    
+    <form method="POST" action="{{ url_for('submit_form') }}" class="contact-form">
+        {{ render_input('jmeno', 'Jméno a příjmení', placeholder='Jan Novák', required=True) }}
+        
+        {{ render_input('email', 'Email', type='email', placeholder='jan.novak@example.com', required=True) }}
+        
+        {{ render_input('telefon', 'Telefonní číslo', type='tel', placeholder='+420 123 456 789', required=True) }}
+        
+        {{ render_input('psc', 'PSČ', placeholder='123 45', required=True) }}
+        
+        {{ render_textarea('zprava', 'Zpráva (volitelné)', placeholder='Vaše zpráva...', required=False) }}
+        
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Odeslat formulář</button>
+        </div>
+    </form>
+    
+    <div class="info-box">
+        <h3>Informace o formuláři</h3>
+        <ul>
+            <li><strong>Jméno:</strong> Může obsahovat pouze písmena, mezery a pomlčky</li>
+            <li><strong>Email:</strong> Platná emailová adresa</li>
+            <li><strong>Telefon:</strong> České telefonní číslo (9 číslic, volitelně +420)</li>
+            <li><strong>PSČ:</strong> 5 číslic (formát: 12345 nebo 123 45)</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

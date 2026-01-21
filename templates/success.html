@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "macros.html" import render_flash_messages %}
+
+{% block title %}Úspěch - Formulář odeslán{% endblock %}
+
+{% block content %}
+<div class="success-container">
+    {{ render_flash_messages() }}
+    
+    <div class="success-icon">✓</div>
+    <h1>Formulář byl úspěšně odeslán!</h1>
+    <p>Děkujeme za vyplnění kontaktního formuláře.</p>
+    
+    <div class="success-actions">
+        <a href="{{ url_for('index') }}" class="btn btn-primary">Zpět na formulář</a>
+        <a href="{{ url_for('view_submissions') }}" class="btn btn-secondary">Zobrazit odeslané formuláře</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% from "macros.html" import render_table_row %}
+
+{% block title %}Odeslané formuláře{% endblock %}
+
+{% block content %}
+<div class="submissions-container">
+    <h1>Odeslané formuláře</h1>
+    
+    {% if submissions %}
+        <p class="subtitle">Celkem odeslaných formulářů: {{ submissions|length }}</p>
+        
+        <div class="submissions-grid">
+            {% for submission in submissions %}
+                <div class="submission-card">
+                    <h3>Formulář #{{ submission.id }}</h3>
+                    <table class="submission-table">
+                        {{ render_table_row('Jméno', submission.jmeno) }}
+                        {{ render_table_row('Email', submission.email) }}
+                        {{ render_table_row('Telefon', submission.telefon) }}
+                        {{ render_table_row('PSČ', submission.psc) }}
+                        {% if submission.zprava %}
+                            {{ render_table_row('Zpráva', submission.zprava) }}
+                        {% endif %}
+                        {{ render_table_row('Datum odeslání', submission.datum_odeslani.strftime('%d.%m.%Y %H:%M')) }}
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>Zatím nebyly odeslány žádné formuláře.</p>
+            <a href="{{ url_for('index') }}" class="btn btn-primary">Vyplnit formulář</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% macro render_input(name, label, type='text', placeholder='', required=True, pattern='') %}
+<div class="form-group">
+    <label for="{{ name }}">{{ label }}{% if required %} <span class="required">*</span>{% endif %}</label>
+    <input 
+        type="{{ type }}" 
+        id="{{ name }}" 
+        name="{{ name }}" 
+        placeholder="{{ placeholder }}"
+        {% if required %}required{% endif %}
+        {% if pattern %}pattern="{{ pattern }}"{% endif %}
+        class="form-control"
+        value="{{ request.form.get(name, '') }}"
+    >
+</div>
+{% endmacro %}
+
+{% macro render_textarea(name, label, placeholder='', required=False, rows=4) %}
+<div class="form-group">
+    <label for="{{ name }}">{{ label }}{% if required %} <span class="required">*</span>{% endif %}</label>
+    <textarea 
+        id="{{ name }}" 
+        name="{{ name }}" 
+        placeholder="{{ placeholder }}"
+        {% if required %}required{% endif %}
+        class="form-control"
+        rows="{{ rows }}"
+    >{{ request.form.get(name, '') }}</textarea>
+</div>
+{% endmacro %}
+
+{% macro render_flash_messages() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                        <button type="button" class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+{% endmacro %}
+
+{% macro render_table_row(label, value) %}
+<tr>
+    <td class="label-cell"><strong>{{ label }}:</strong></td>
+    <td>{{ value }}</td>
+</tr>
+{% endmacro %}
