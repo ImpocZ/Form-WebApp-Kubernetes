@@ -1,27 +1,21 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: contact-form-app
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: contact-form-app
-  namespace: contact-form-app
+  name: my-form
+  namespace: my-form
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: contact-form-app
+      app: my-form
   template:
     metadata:
       labels:
-        app: contact-form-app
+        app: my-form
     spec:
       containers:
       - name: flask-app
-        image: ghcr.io/ImpocZ/contact-form-app:latest
+        image: ghcr.io/impocz/form-webapp-kubernetes:main
         ports:
         - containerPort: 5000
         env:
@@ -35,6 +29,9 @@ spec:
             secretKeyRef:
               name: flask-secrets
               key: database-url
+        volumeMounts:
+        - name: app-data
+          mountPath: /app/data
         resources:
           requests:
             memory: "256Mi"
@@ -54,16 +51,20 @@ spec:
             port: 5000
           initialDelaySeconds: 10
           periodSeconds: 5
+      volumes:
+      - name: app-data
+        persistentVolumeClaim:
+          claimName: my-form-data
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: contact-form-service
-  namespace: contact-form-app
+  name: my-form-service
+  namespace: my-form
 spec:
   selector:
-    app: contact-form-app
+    app: my-form
   ports:
   - protocol: TCP
     port: 80
@@ -75,34 +76,34 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: flask-secrets
-  namespace: contact-form-app
+  namespace: my-form
 type: Opaque
 stringData:
-  secret-key: "change-this-to-a-random-secret-key"
-  database-url: "sqlite:///app.db"
+  secret-key: "YOUR-SECRET-KEY"
+  database-url: "sqlite:////app/data/app.db"
 
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: contact-form-ingress
-  namespace: contact-form-app
+  name: my-form-ingress
+  namespace: my-form
   annotations:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   tls:
   - hosts:
-    - contact-form.kube.sspu-opava.cz
-    secretName: contact-form-tls
+    - my-form.kube.sspu-opava.cz
+    secretName: my-form-tls
   rules:
-  - host: contact-form.kube.sspu-opava.cz
+  - host: my-form.kube.sspu-opava.cz
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: contact-form-service
+            name: my-form-service
             port:
               number: 80
